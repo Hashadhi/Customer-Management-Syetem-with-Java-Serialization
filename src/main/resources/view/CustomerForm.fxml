@@ -40,7 +40,8 @@
             <HBox prefHeight="25.0" prefWidth="560.0" spacing="10.0">
                <children>
                   <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" prefHeight="33.0" prefWidth="70.0" style="-fx-font-family: Ubuntu;" text="Picture : " />
-                  <TextField fx:id="txtPicture" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="334.0" promptText="Eg. Matara" style="-fx-font-family: Ubuntu;" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="txtPicture" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="482.0" promptText="Eg. Matara" style="-fx-font-family: Ubuntu;" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnBrowse" mnemonicParsing="false" onAction="#btnBrowse_OnAction" text="&gt;&gt;" />
                </children>
             </HBox>
          </children>

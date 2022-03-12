@@ -2,6 +2,7 @@ package lk.ijse.dep8.controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -11,6 +12,7 @@ public class CustomerFormController {
     public TextField txtAddress;
     public TextField txtPicture;
     public TableView tblCustomers;
+    public Button btnBrowse;
 
     public void btnSaveCustomer_OnAction(ActionEvent actionEvent) {
 
@@ -32,9 +34,17 @@ public class CustomerFormController {
             txtAddress.selectAll();
             txtAddress.requestFocus();
             return false;
+        }else if (!txtPicture.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Address cannot be empty").show();
+            txtAddress.selectAll();
+            txtAddress.requestFocus();
+            return false;
         }
 
         return true;
 
+    }
+
+    public void btnBrowse_OnAction(ActionEvent actionEvent) {
     }
 }
