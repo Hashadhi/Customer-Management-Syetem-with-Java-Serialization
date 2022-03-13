@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
-
 public class CustomerFormController {
     private final Path path = setPath();
     public TextField txtID;
@@ -61,13 +60,16 @@ public class CustomerFormController {
         initDatabase();
 
         tblCustomers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            btnSave.setText(newValue == null ? "Save Customer" : "Update Customer");
-            txtID.setDisable(true);
-            fillFields(newValue);
-
+            if (newValue != null) {
+                btnSave.setText("Update Customer");
+                txtID.setDisable(true);
+                fillFields(newValue);
+            }else{
+                btnSave.setText("Save Customer");
+                txtID.setDisable(false);
+            }
         });
     }
-
 
     public void btnSaveCustomer_OnAction(ActionEvent actionEvent) throws IOException {
         if (!isValid()) return;
@@ -84,9 +86,7 @@ public class CustomerFormController {
                     tblCustomers.getItems().add(newCustomer);
                 }
 
-
             } else {
-
                 CustomerTM selectedCustomer = tblCustomers.getSelectionModel().getSelectedItem();
                 String id = selectedCustomer.getId();
                 selectedCustomer.setName(txtName.getText());
@@ -124,11 +124,11 @@ public class CustomerFormController {
         txtName.clear();
         txtAddress.clear();
         txtPicture.clear();
-        txtID.requestFocus();
     }
 
     public boolean isValid() {
-        if (!txtID.getText().trim().matches("C\\d{3}")) {
+
+        if (!txtID.getText().trim().matches("C\\d{3}") || tblCustomers.getItems().stream().anyMatch(c -> c.getId().equalsIgnoreCase(txtID.getText()))) {
             new Alert(Alert.AlertType.ERROR, "Invalid Id").show();
             txtID.selectAll();
             txtID.requestFocus();
@@ -156,6 +156,7 @@ public class CustomerFormController {
                 Path pathDir = Files.createDirectory(path.getParent());
                 Files.createFile(path);
             }
+
             loadDatabase();
 
         } catch (IOException e) {
@@ -177,7 +178,6 @@ public class CustomerFormController {
             ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path, StandardOpenOption.READ));
             tblCustomers.getItems().clear();
             tblCustomers.setItems(FXCollections.observableArrayList((ArrayList<CustomerTM>) (ois.readObject())));
-
         } catch (IOException | ClassNotFoundException e) {
             if (e instanceof EOFException) return;
         }
@@ -189,10 +189,6 @@ public class CustomerFormController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*jpg", "*.png", "*.jpeg", "*.gif", "*.bmp"));
         File file = fileChooser.showOpenDialog(btnBrowse.getScene().getWindow());
         txtPicture.setText(file != null ? file.getAbsolutePath() : "");
-    }
-
-    public void btnAddCustomer_OnAction(ActionEvent actionEvent) {
-
     }
 
     private void fillFields(CustomerTM customer) {
