@@ -10,14 +10,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="603.0" prefWidth="711.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep8.controller.CustomerFormController">
+<AnchorPane prefHeight="630.0" prefWidth="711.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep8.controller.CustomerFormController">
    <children>
       <Label layoutX="302.0" layoutY="18.0" text="Add Customers" AnchorPane.topAnchor="18.0">
          <font>
             <Font name="Ubuntu Bold" size="16.0" />
          </font>
       </Label>
-      <VBox layoutX="24.0" layoutY="54.0" prefHeight="108.0" prefWidth="560.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+      <VBox layoutX="24.0" layoutY="71.0" prefHeight="146.0" prefWidth="671.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
          <children>
             <HBox prefHeight="25.0" prefWidth="560.0" spacing="10.0">
                <children>
@@ -46,7 +46,7 @@
             </HBox>
          </children>
       </VBox>
-      <Button defaultButton="true" layoutX="104.0" layoutY="205.0" mnemonicParsing="false" onAction="#btnSaveCustomer_OnAction" prefHeight="26.0" prefWidth="119.0" style="-fx-font-family: Ubuntu;" text="Save Customer" />
+      <Button fx:id="btnSave" defaultButton="true" layoutX="256.0" layoutY="229.0" mnemonicParsing="false" onAction="#btnSaveCustomer_OnAction" prefHeight="33.0" prefWidth="196.0" style="-fx-font-family: Ubuntu;" text="Save Customer" />
       <TableView fx:id="tblCustomers" layoutX="20.0" layoutY="255.0" prefHeight="299.0" prefWidth="665.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
          <columns>
             <TableColumn prefWidth="75.0" style="-fx-font-family: Ubuntu;" text="ID" />
@@ -56,5 +56,6 @@
             <TableColumn prefWidth="138.0" />
          </columns>
       </TableView>
+      <Button fx:id="btnAddCustomer" layoutX="547.0" layoutY="31.0" mnemonicParsing="false" onAction="#btnAddCustomer_OnAction" prefHeight="26.0" prefWidth="135.0" style="-fx-font-family: Ubuntu;" text="Add new Customer" />
    </children>
 </AnchorPane>

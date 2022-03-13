@@ -27,11 +27,10 @@ public class CustomerFormController {
     public TextField txtPicture;
     public TableView<CustomerTM> tblCustomers;
     public Button btnBrowse;
+    public Button btnAddCustomer;
+    public Button btnSave;
 
     public void initialize() {
-
-
-
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
         tblCustomers.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("name"));
         tblCustomers.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -60,30 +59,51 @@ public class CustomerFormController {
         });
 
         initDatabase();
+
+        tblCustomers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            btnSave.setText(newValue == null ? "Save Customer" : "Update Customer");
+            txtID.setDisable(true);
+            fillFields(newValue);
+
+        });
     }
 
+
     public void btnSaveCustomer_OnAction(ActionEvent actionEvent) throws IOException {
-        if (!isValid()) {
-            return;
-        } else {
+        if (!isValid()) return;
+        else {
             CustomerTM newCustomer;
-            if (!txtPicture.getText().isEmpty()) {
-                byte[] picture = Files.readAllBytes(Paths.get(txtPicture.getText()));
-                newCustomer = new CustomerTM(txtID.getText(), txtName.getText(), txtAddress.getText(), picture);
-                tblCustomers.getItems().add(newCustomer);
+            if (btnSave.getText().equals("Save Customer")) {
+
+                if (!txtPicture.getText().isEmpty()) {
+                    byte[] picture = Files.readAllBytes(Paths.get(txtPicture.getText()));
+                    newCustomer = new CustomerTM(txtID.getText(), txtName.getText(), txtAddress.getText(), picture);
+                    tblCustomers.getItems().add(newCustomer);
+                } else {
+                    newCustomer = new CustomerTM(txtID.getText(), txtName.getText(), txtAddress.getText(), null);
+                    tblCustomers.getItems().add(newCustomer);
+                }
+
+
             } else {
-                newCustomer = new CustomerTM(txtID.getText(), txtName.getText(), txtAddress.getText(), null);
-                tblCustomers.getItems().add(newCustomer);
+
+                CustomerTM selectedCustomer = tblCustomers.getSelectionModel().getSelectedItem();
+                String id = selectedCustomer.getId();
+                selectedCustomer.setName(txtName.getText());
+                selectedCustomer.setAddress(txtAddress.getText());
+                if (!txtPicture.getText().equals("[PICTURE]")) {
+                    selectedCustomer.setPicture(Files.readAllBytes(Paths.get(txtPicture.getText())));
+                }
+                tblCustomers.getSelectionModel().clearSelection();
+                tblCustomers.refresh();
             }
 
             boolean result = saveCustomers();
-
             if (result) {
                 new Alert(Alert.AlertType.INFORMATION, "Customer saved").show();
                 clearFields();
             } else {
                 new Alert(Alert.AlertType.ERROR, "Failed to save the customer").show();
-                tblCustomers.getItems().remove(newCustomer);
             }
         }
     }
@@ -97,7 +117,6 @@ public class CustomerFormController {
             e.printStackTrace();
             return false;
         }
-
     }
 
     private void clearFields() {
@@ -122,19 +141,21 @@ public class CustomerFormController {
             new Alert(Alert.AlertType.ERROR, "Address cannot be empty").show();
             txtAddress.requestFocus();
             return false;
+        } else if (!txtPicture.getText().isEmpty() && !Files.exists(Paths.get(txtPicture.getText())) && !txtPicture.getText().equals("[PICTURE]")) {
+            new Alert(Alert.AlertType.ERROR, "No such picture in the selected path").showAndWait();
+            txtPicture.selectAll();
+            txtPicture.requestFocus();
+            return false;
         }
         return true;
-
     }
 
     private void initDatabase() {
-
         try {
             if (!Files.exists(path)) {
                 Path pathDir = Files.createDirectory(path.getParent());
                 Files.createFile(path);
             }
-
             loadDatabase();
 
         } catch (IOException e) {
@@ -151,7 +172,6 @@ public class CustomerFormController {
         return pathFile;
     }
 
-
     private void loadDatabase() {
         try {
             ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path, StandardOpenOption.READ));
@@ -159,12 +179,9 @@ public class CustomerFormController {
             tblCustomers.setItems(FXCollections.observableArrayList((ArrayList<CustomerTM>) (ois.readObject())));
 
         } catch (IOException | ClassNotFoundException e) {
-            if (e instanceof EOFException) {
-                return;
-            }
+            if (e instanceof EOFException) return;
         }
     }
-
 
     public void btnBrowse_OnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
@@ -172,5 +189,16 @@ public class CustomerFormController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*jpg", "*.png", "*.jpeg", "*.gif", "*.bmp"));
         File file = fileChooser.showOpenDialog(btnBrowse.getScene().getWindow());
         txtPicture.setText(file != null ? file.getAbsolutePath() : "");
+    }
+
+    public void btnAddCustomer_OnAction(ActionEvent actionEvent) {
+
+    }
+
+    private void fillFields(CustomerTM customer) {
+        txtID.setText(customer.getId());
+        txtName.setText(customer.getName());
+        txtAddress.setText(customer.getAddress());
+        txtPicture.setText("[PICTURE]");
     }
 }
