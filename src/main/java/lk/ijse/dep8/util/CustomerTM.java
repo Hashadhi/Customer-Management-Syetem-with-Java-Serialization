@@ -1,15 +1,18 @@
 package lk.ijse.dep8.util;
 
-public class CustomerTM {
+import java.io.Serializable;
+import java.util.Arrays;
+
+public class CustomerTM implements Serializable {
     private String id;
     private String name;
     private String address;
-    private String picture;
+    private byte[] picture;
 
     public CustomerTM() {
     }
 
-    public CustomerTM(String id, String name, String address, String picture) {
+    public CustomerTM(String id, String name, String address, byte[] picture) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -40,11 +43,11 @@ public class CustomerTM {
         this.address = address;
     }
 
-    public String getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 
@@ -54,7 +57,7 @@ public class CustomerTM {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", picture='" + picture + '\'' +
+                ", picture=" + Arrays.toString(picture) +
                 '}';
     }
 }
