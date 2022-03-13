@@ -5,6 +5,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CustomerFormController {
     public TextField txtID;
@@ -14,7 +19,13 @@ public class CustomerFormController {
     public TableView tblCustomers;
     public Button btnBrowse;
 
+    public void initialize() {
+
+    }
+
     public void btnSaveCustomer_OnAction(ActionEvent actionEvent) {
+
+
 
     }
 
@@ -46,5 +57,10 @@ public class CustomerFormController {
     }
 
     public void btnBrowse_OnAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Images");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*jpg", "*.png", "*.jpeg", "*.gif", "*.bmp"));
+        File file = fileChooser.showOpenDialog(btnBrowse.getScene().getWindow());
+        txtPicture.setText(file != null? file.getAbsolutePath() : "");
     }
 }
